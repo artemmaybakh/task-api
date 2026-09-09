@@ -23,7 +23,7 @@ tasks: dict[int, Task] = {}
 next_id: int = 1
 
 
-@app.get("/healf")
+@app.get("/health")
 async def healf():
     return {"status": "ok"}
 
@@ -42,7 +42,7 @@ async def create_task(payload: TaskCreate):
 
 #curl.exe --% -X POST http://127.0.0.1:8000/tasks -H "Content-Type: application/json" -d "{\"title\":\"read FastAPI docs\",\"description\":\"at least tutorial\"}"
 
-@app.get("/tasks", response_model=Task)
+@app.get("/tasks", response_model=list[Task])
 async def list_task():
     return list(tasks.values())
 
@@ -53,7 +53,7 @@ async def get_task(task_id: int):
         raise HTTPException(status_code=404, detail="task not found")
     return task
 
-@app.patch("/task/{task_id}", response_model=Task)
+@app.patch("/tasks/{task_id}", response_model=Task)
 async def update_task(task_id: int, payload: TaskUpdate):
     task = tasks.get(task_id)
     if task is None:
@@ -75,3 +75,5 @@ async def delete_task(task_id: int):
 async def slow_endpoint():
     await asyncio.sleep(1)
     return {"message": "done"}
+
+
